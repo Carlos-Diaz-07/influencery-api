@@ -1714,10 +1714,20 @@ end
 
 tag_length = tags.length
 
-puts 'Creating Influencers'
+puts 'Creating Influencers & influencer tags'
 
 influencers.each do |inf|
-  Influencer.create!(inf) do |influencer|
-    influencer.tag_ids = [rand(1..tag_length), rand(1..tag_length), rand(1..tag_length), rand(1..tag_length)] - [influencer.primary_tag_id]
-  end
+  influencer = Influencer.create!(handle: inf[:handle], followers: inf[:followers], profile_pic_url: inf[:profile_pic_url], platform_id: inf[:platform_id], primary_tag_id: inf[:primary_tag_id])
+
+  4.times {
+    random_id = rand(1..tag_length)
+
+    # This If statement is to prevent creating an InfluencerTag equal to
+    # the primary tag or with an none exinting tag id (for example 0 or tag_length + 1)
+    if random_id == influencer.primary_tag_id
+      random_id == 1 ? random_id += 1 : random_id -=1
+    end
+
+    InfluencerTag.create!(influencer_id: influencer.id, tag_id: random_id )
+  }
 end
