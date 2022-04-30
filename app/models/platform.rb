@@ -3,5 +3,4 @@ class Platform < ApplicationRecord
 
   validates :name, presence: true
   validates :base_url, presence: true
-
 end
